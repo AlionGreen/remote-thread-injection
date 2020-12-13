@@ -10,27 +10,24 @@
 DWORD find_process(char *process){
 
 	PROCESSENTRY32 process_entry;
-    process_entry.dwSize = sizeof(PROCESSENTRY32);
+	process_entry.dwSize = sizeof(PROCESSENTRY32);
 
-    //get the list of processes
-    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	//get the list of processes
+	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 
-    //check processes to find TARGET_PROCESS_NAME
-    if (Process32First(snapshot, &process_entry) == TRUE)
-    {
-        while (Process32Next(snapshot, &process_entry) == TRUE)
-        {
-            if (stricmp(process_entry.szExeFile, process) == 0)
-            {  
-                CloseHandle(snapshot);
-                return process_entry.th32ProcessID;
-            }
-        }
-    }
+	//check processes to find TARGET_PROCESS_NAME
+	if (Process32First(snapshot, &process_entry) == TRUE){
+		
+        	while (Process32Next(snapshot, &process_entry) == TRUE){
+        		if (stricmp(process_entry.szExeFile, process) == 0){  
+				CloseHandle(snapshot);
+				return process_entry.th32ProcessID;
+            		}
+        	}
+    	}
 
-    CloseHandle(snapshot);
-    return 0;
-
+	CloseHandle(snapshot);
+	return 0;
 }
 
 int main(int argc, char *argv[]){
@@ -78,7 +75,7 @@ int main(int argc, char *argv[]){
 	DWORD process_id = find_process(TARGET_PROCESS_NAME);
 	if (process_id == 0){
 		printf("failed to find %s process\n",TARGET_PROCESS_NAME );
-		return -1;
+		return 1;
 	}
 	printf("%s process found with process id: %d\n",TARGET_PROCESS_NAME,process_id );
 
