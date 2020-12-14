@@ -158,7 +158,7 @@ int main(int argc, char *argv[]){
 		printf("failed to find %s process\n",TARGET_PROCESS_NAME );
 		return 1;
 	}
-	printf("%s process found with process id: %d\n",procid);
+	printf("%s process found with process id: %d\n", TARGET_PROCESS_NAME, procid);
 
 	CLIENT_ID ci = { (HANDLE)procid, NULL };
 
