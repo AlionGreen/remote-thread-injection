@@ -7,7 +7,7 @@
 #define TARGET_PROCESS_NAME "notepad.exe"
 
 
-DWORD find_process(char *process){
+DWORD find_process(char *process_name){
 
 	PROCESSENTRY32 process_entry;
 	process_entry.dwSize = sizeof(PROCESSENTRY32);
@@ -19,7 +19,7 @@ DWORD find_process(char *process){
 	if (Process32First(snapshot, &process_entry) == TRUE){
 		
         	while (Process32Next(snapshot, &process_entry) == TRUE){
-        		if (stricmp(process_entry.szExeFile, process) == 0){  
+        		if (stricmp(process_entry.szExeFile, process_name) == 0){  
 				CloseHandle(snapshot);
 				return process_entry.th32ProcessID;
             		}
@@ -72,16 +72,16 @@ int main(int argc, char *argv[]){
 
 
 	//find the process id
-	DWORD process_id = find_process(TARGET_PROCESS_NAME);
-	if (process_id == 0){
+	DWORD target_process_id = find_process(TARGET_PROCESS_NAME);
+	if (target_process_id == 0){
 		printf("failed to find %s process\n",TARGET_PROCESS_NAME );
 		return 1;
 	}
-	printf("%s process found with process id: %d\n",TARGET_PROCESS_NAME,process_id );
+	printf("%s process found with process id: %d\n",TARGET_PROCESS_NAME, target_process_id );
 
 
 	//open a process handle
-	target_process_handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, process_id);
+	target_process_handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, target_process_id);
 	
 	//allocate a space in the target process
 	remote_process_buffer = VirtualAllocEx(target_process_handle, NULL, sizeof(buf), MEM_RESERVE|MEM_COMMIT, PAGE_EXECUTE_READWRITE);
