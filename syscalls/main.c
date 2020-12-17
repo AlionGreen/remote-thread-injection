@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <windows.h>
+#include <memoryapi.h>
 #include <stdio.h>
 #include <tlhelp32.h>
 #include "syscalls.h"
